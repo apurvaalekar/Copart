@@ -25,6 +25,6 @@ README
 		1.	javac NearestCopartLocation.java 	
 		2.	javac ZipCodeApi.java
 		3. java NearestCopartLocation
-		
 Problem : The CSV(CopartLocation File) file we are giving as input consists of <City,State> format. The API we are using to get zip code given city and state are giving null for some states.
-So the program is not moving forward.
+So the program is not moving forward. , rest all logic is complete.
+				

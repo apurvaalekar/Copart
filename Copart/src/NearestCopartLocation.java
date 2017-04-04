@@ -38,16 +38,16 @@ public class NearestCopartLocation {
 		String customerID;
 		String zipCode;
 		Scanner in=new Scanner(System.in);
-		NearestCopartLocation nearCopart=new NearestCopartLocation();
-		nearCopart.addressMap=nearCopart.getLocationInputandPutinMap(new File("Location.csv"));
-		nearCopart.customerMap=nearCopart.getCustomerLocationMap(new File("CopartCustomerLocation.csv"));
+		NearestCopartLocation ncl=new NearestCopartLocation();
+		ncl.addressMap=ncl.getLocationInputandPutinMap(new File("Location.csv"));
+		ncl.customerMap=ncl.getCustomerLocationMap(new File("CopartCustomerLocation.csv"));
 		System.out.println("Enter Customer ID and Zip code");
 		while(in.hasNext())
 		{
 		customerID=in.nextLine();
 		zipCode=in.nextLine();
-		if(customerID.length()>1 && zipCode.length()>1)
-		     System.out.println(nearCopart.getNearestLocation(customerID, zipCode));
+		
+	    System.out.println(ncl.getNearestLocation(customerID, zipCode));
 		System.out.println("Enter Customer ID and Zip code");
 		}
 		
@@ -56,19 +56,23 @@ public class NearestCopartLocation {
 	public Location getNearestLocation(String customerID,String zipCode)
 	{
 		ZipCodeApi zipCodeApi=new ZipCodeApi();
+		//check if customer's data is already present then suggest the location directly.
 		if(customerMap.containsKey(customerID))
 			return (Location)addressMap.get(customerMap.get(customerID));
+		//or if the location is already added in database
 		if(nearLocation.containsKey(zipCode))
 		{
 			return (Location)addressMap.get(nearLocation.get(zipCode));
 		}
-		
+		//otherwise calculate the distance.
 		double distanceMin=Double.MAX_VALUE;
 		String minZipCode=null;
 		System.out.println("Fetching from API............");
 		for(Object zip: addressMap.keySet())
 		{
+			//call to API to copmare two APIs
 			double value=zipCodeApi.getDistance(zipCode, (String)zip); 
+			//minimum calculation.
 			if(value<distanceMin)
 			{
 				distanceMin=value;
@@ -93,7 +97,7 @@ public class NearestCopartLocation {
 			}
 			catch(Exception e)
 			{
-				//just skip misMatched ones
+				e.printStackTrace();
 			}
 		}
 		
@@ -118,7 +122,7 @@ public class NearestCopartLocation {
 			}
 			catch(Exception e)
 			{
-				//just skip mismatched locations
+				e.printStackTrace();
 			}
 		}
 		
